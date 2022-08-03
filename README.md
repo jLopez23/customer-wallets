@@ -22,19 +22,19 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Customer Wallets
 
 ## Installation
 
-```bash
+Instalar las dependencias y devDependencies del proyecto
+
+```sh
 $ npm install
 ```
 
 ## Running the app
 
-```bash
+```sh
 # development
 $ npm run start
 
@@ -45,28 +45,33 @@ $ npm run dev
 $ npm run start:prod
 ```
 
-## Test
+### Base de datos
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```sh
+El proyecto trabaja con mongoDb, por tal motivo es necesario tener instalada esta DB localmente y poner a correr su servicio, para que el proyecto pueda crear las tablas necesarias para su funcionamiento```
 ```
 
-## Support
+### Iniciar aplicación
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Para iniciar la aplicación se debe correr el siguiente comando:
+```sh
+$ npm run start
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Collections
+
+Se creo y se compartirá un archivo de colecciones en Postman con los diferentes llamados de cada servicio de la aplicación, esto con el fin de facilitar la validación de la aplicación.
+Debido a que las colecciones trabajan variables de un archivo Environment, se sugiere la ejecución de los servicios en el siguiente orden:
+```sh
+ - auth/register
+ - auth/login
+ 
+ - wallets/create
+ - wallets/findById
+ - wallets/update
+ 
+ -customers/findById
+ ```
 
 ## License
 

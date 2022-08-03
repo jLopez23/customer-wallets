@@ -74,6 +74,13 @@ Debido a que las colecciones trabajan con las variables de un archivo Environmen
  
  -customers/findById
  ```
+ 
+ ### Documentación Swagger
+
+La ruta para poder ver la documentación en Swagger es la siguiente:
+```sh
+http://localhost:3000/apis-docs/
+ ```
 
 ## License
 

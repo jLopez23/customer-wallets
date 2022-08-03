@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 import {
   Customers,
   CustomersDocument,
-} from 'src/customers/schema/customers.schema';
+} from '../customers/schema/customers.schema';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { hash, compare } from 'bcrypt';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -27,7 +27,8 @@ export class AuthService {
     try {
       const { password } = registerCustomer;
       const passworHash = await hash(password, 10);
-      registerCustomer = { ...registerCustomer, password: passworHash };
+      registerCustomer.password = passworHash;
+
       return this.customersModule.create(registerCustomer);
     } catch (error) {
       throw new BadRequestException('error registering customer', error);

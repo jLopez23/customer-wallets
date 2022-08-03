@@ -7,7 +7,7 @@ import {
   CustomersSchema,
 } from '../customers/schema/customers.schema';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants/jwt.constants';
+import { jwtConstants } from '../../utils/constants/jwt.constants';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({

@@ -1,12 +1,11 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { Customers } from '../customers/schema/customers.schema';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { CustomerEntity } from './entities/customer.entity';
 import { Serialize } from './interceptor/serialize.interceptor';
 
-@ApiBearerAuth()
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -14,7 +13,7 @@ export class AuthController {
 
   @Post('register')
   @ApiResponse({ status: 201, description: 'Registered customer' })
-  @Serialize(CustomerEntity)
+  @Serialize(Customers)
   registerCustomer(@Body() registerCustomer: RegisterAuthDto) {
     return this.authService.register(registerCustomer);
   }

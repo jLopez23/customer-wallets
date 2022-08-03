@@ -1,9 +1,9 @@
-import { Controller, Get, Param, UseGuards, Headers } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { CustomersService } from './customers.service';
-import { CustomerEntity } from '../auth/entities/customer.entity';
 import { Serialize } from '../auth/interceptor/serialize.interceptor';
+import { Customers } from './schema/customers.schema';
 
 @ApiBearerAuth()
 @ApiTags('customers')
@@ -14,8 +14,8 @@ export class CustomersController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Info user' })
-  @Serialize(CustomerEntity)
-  findOne(@Param('id') id: string, @Headers() headers) {
-    return this.customersService.findOne(+id, headers.authorization);
+  @Serialize(Customers)
+  findById(@Param('id') id: string) {
+    return this.customersService.findById(id);
   }
 }

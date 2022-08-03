@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Headers,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
@@ -20,27 +20,18 @@ export class WalletsController {
 
   @Post()
   @ApiResponse({ status: 201, description: 'Wallet created' })
-  create(@Body() createWalletDto: CreateWalletDto) {
-    return this.walletsService.create(createWalletDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.walletsService.findAll();
+  create(@Body() createWalletDto: CreateWalletDto, @Headers() headers) {
+    return this.walletsService.create(createWalletDto, headers.authorization);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(+id);
+  findById(@Param('id') id: string) {
+    return this.walletsService.findById(id);
   }
 
   @Patch(':id')
+  @ApiResponse({ status: 200, description: 'Wallet updated' })
   update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto) {
-    return this.walletsService.update(+id, updateWalletDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.walletsService.remove(+id);
+    return this.walletsService.update(id, updateWalletDto);
   }
 }

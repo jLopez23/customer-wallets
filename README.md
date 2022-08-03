@@ -48,7 +48,8 @@ $ npm run start:prod
 ### Base de datos
 
 ```sh
-El proyecto trabaja con mongoDb, por tal motivo es necesario tener instalada esta DB localmente y poner a correr su servicio, para que el proyecto pueda crear las tablas necesarias para su funcionamiento```
+El proyecto trabaja con mongoDb, por tal motivo es necesario tenerla instalada localmente y poner a 
+correr su servicio, para que el proyecto pueda crear los documentos necesarios para su funcionamiento
 ```
 
 ### Iniciar aplicación
@@ -56,12 +57,13 @@ El proyecto trabaja con mongoDb, por tal motivo es necesario tener instalada est
 Para iniciar la aplicación se debe correr el siguiente comando:
 ```sh
 $ npm run start
+```
 
-
-### Collections
+### Postman collections
 
 Se creo y se compartirá un archivo de colecciones en Postman con los diferentes llamados de cada servicio de la aplicación, esto con el fin de facilitar la validación de la aplicación.
-Debido a que las colecciones trabajan variables de un archivo Environment, se sugiere la ejecución de los servicios en el siguiente orden:
+
+Debido a que las colecciones trabajan con las variables de un archivo Environment, se sugiere la ejecución de los servicios en el siguiente orden:
 ```sh
  - auth/register
  - auth/login

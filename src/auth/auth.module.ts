@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { MongooseModule } from '@nestjs/mongoose';
 import {
   Customers,
   CustomersSchema,
 } from '../customers/schema/customers.schema';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from '../../utils/constants/jwt.constants';
+import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -18,13 +18,16 @@ import { JwtStrategy } from './jwt.strategy';
         schema: CustomersSchema,
       },
     ]),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('jwt.secretKey'),
+        signOptions: { expiresIn: configService.get<string>('jwt.expiration') },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}

@@ -4,16 +4,17 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import {
   Customers,
   CustomersDocument,
 } from '../customers/schema/customers.schema';
-import { RegisterAuthDto } from './dto/register-auth.dto';
+import { Model } from 'mongoose';
 import { hash, compare } from 'bcrypt';
-import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { RegisterAuthDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,12 +22,14 @@ export class AuthService {
     @InjectModel(Customers.name)
     private readonly customersModule: Model<CustomersDocument>,
     private jwtService: JwtService,
-  ) { }
+    private configService: ConfigService,
+  ) {}
 
   async register(registerCustomer: RegisterAuthDto) {
     try {
       const { password } = registerCustomer;
-      const passworHash = await hash(password, 10);
+      const rounds = this.configService.get<number>('hashRounds');
+      const passworHash = await hash(password, rounds);
       registerCustomer.password = passworHash;
 
       return this.customersModule.create(registerCustomer);
@@ -39,13 +42,13 @@ export class AuthService {
     const { email, password } = loginCustomer;
 
     const findCustomer = await this.customerExists(email);
-    await this.validatePassword(password, findCustomer.password);
+    this.validatePassword(password, findCustomer.password);
 
-    const access_token = await this.generateToken(
+    const accessToken = await this.generateToken(
       findCustomer._id,
       findCustomer.fullName,
     );
-    return { access_token };
+    return { accessToken };
   }
 
   async customerExists(email: string) {
@@ -57,14 +60,13 @@ export class AuthService {
     return findCustomer;
   }
 
-  async validatePassword(passwordLogin, passwordCustomer) {
-    const password = await compare(passwordLogin, passwordCustomer);
+  validatePassword(passwordLogin: string, passwordCustomer: string) {
+    const password = compare(passwordLogin, passwordCustomer);
     if (!password) throw new ForbiddenException('The password is incorrect');
   }
 
   async generateToken(id: string, fullName: string) {
     const payload = { id, fullName };
-    const token = await this.jwtService.sign(payload);
-    return token;
+    return await this.jwtService.sign(payload);
   }
 }

@@ -1,6 +1,6 @@
+import { Document } from 'mongoose';
 import { Expose } from 'class-transformer';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 
 export type CustomersDocument = Customers & Document;
 

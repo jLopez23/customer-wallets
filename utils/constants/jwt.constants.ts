@@ -1,3 +1,1 @@
-export const jwtConstants = {
-  secret: 'MyKeyJwt',
-};
+export const jwtConstants = {};

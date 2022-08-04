@@ -1,7 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
 import { LoginAuthDto } from './login-auth.dto';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsString, IsNumber, IsNotEmpty, IsDefined } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterAuthDto extends PartialType(LoginAuthDto) {
   @IsString({ message: 'fullName: debe ser un string' })

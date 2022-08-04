@@ -3,33 +3,35 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { Wallets, WalletsDocument } from './schema/wallets.schema';
-import { JwtService } from '@nestjs/jwt';
-import { usdConstants } from '../../utils/constants/usd.constants';
 
 @Injectable()
 export class WalletsService {
   constructor(
     @InjectModel(Wallets.name) private walletsModule: Model<WalletsDocument>,
     private jwtService: JwtService,
-  ) { }
+    private configService: ConfigService,
+  ) {}
 
-  async create(createWalletDto: CreateWalletDto, access_token: string) {
+  async create(createWalletDto: CreateWalletDto, accessToken: string) {
     try {
-      const customerID = await this.decodeAccessToken(access_token);
+      const customerID = await this.decodeAccessToken(accessToken);
+      const pesoDollarValue = this.configService.get<number>('pesoDollarValue');
       createWalletDto = {
         ...createWalletDto,
         customerID: customerID,
-        balanceUSD: createWalletDto.balanceCOP * usdConstants.pesoDollarValue,
+        balanceUSD: createWalletDto.balanceCOP * pesoDollarValue,
       };
 
       return this.walletsModule.create(createWalletDto);
     } catch (error) {
-      throw new BadRequestException('error registering customer', error);
+      throw new BadRequestException('error registering wallet', error);
     }
   }
 
@@ -50,11 +52,11 @@ export class WalletsService {
   async update(id: string, updateWalletDto: UpdateWalletDto) {
     const customerBalance = await this.walletsModule.findById(id);
 
-    const totalCOP = await this.sumarCOP(
+    const totalCOP = this.addCOP(
       customerBalance.balanceCOP,
       updateWalletDto.balanceCOP,
     );
-    const totalUSD = await this.sumarUSD(
+    const totalUSD = this.addUSD(
       customerBalance.balanceUSD,
       updateWalletDto.balanceCOP,
     );
@@ -80,12 +82,13 @@ export class WalletsService {
     return decodedJwt.id;
   }
 
-  async sumarCOP(currentBalanceCOP: number, rechargedValue: number) {
+  addCOP(currentBalanceCOP: number, rechargedValue: number) {
     return currentBalanceCOP + rechargedValue;
   }
 
-  async sumarUSD(currentBalanceUSD: number, rechargedValue: number) {
-    const convertUSD = rechargedValue * usdConstants.pesoDollarValue;
+  addUSD(currentBalanceUSD: number, rechargedValue: number) {
+    const pesoDollarValue = this.configService.get<number>('pesoDollarValue');
+    const convertUSD = rechargedValue * pesoDollarValue;
     return currentBalanceUSD + convertUSD;
   }
 }

@@ -1,15 +1,15 @@
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
+import { Customers } from './schema/customers.schema';
+import { CustomersService } from './customers.service';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { CustomersService } from './customers.service';
 import { Serialize } from '../auth/interceptor/serialize.interceptor';
-import { Customers } from './schema/customers.schema';
 
 @ApiBearerAuth()
 @ApiTags('customers')
 @Controller('customers')
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')

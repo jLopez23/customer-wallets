@@ -1,5 +1,5 @@
-import { IsNumber, IsNotEmpty, IsDefined } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsNotEmpty, IsDefined } from 'class-validator';
 
 export class CreateWalletDto {
   customerID: string;
